@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Godfidence">
+<meta name="theme-color" content="#ffffff">
+<title>Godfidence</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #fafaf8;
+    --surface: #ffffff;
+    --border: #e8e6e0;
+    --text: #1a1a18;
+    --muted: #9a9890;
+    --accent: #c8a96e;
+    --accent-soft: #f5efe4;
+    --radius: 16px;
+    --safe-top: env(safe-area-inset-top);
+    --safe-bottom: env(safe-area-inset-bottom);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    overscroll-behavior: none;
+  }
+
+  /* ── APP SHELL ── */
+  #app {
+    display: flex;
+    flex-direction: column;
+    height: 100dvh;
+    max-width: 430px;
+    margin: 0 auto;
+    background: var(--bg);
+  }
+
+  /* ── HEADER ── */
+  .header {
+    padding: calc(16px + var(--safe-top)) 24px 0;
+    background: var(--bg);
+    flex-shrink: 0;
+  }
+
+  .header-top {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  .logo {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .logo-name {
+    font-family: 'Cormorant', serif;
+    font-size: 30px;
+    font-weight: 300;
+    letter-spacing: 0.04em;
+    color: var(--text);
+    line-height: 1;
+  }
+
+  .logo-sub {
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  .header-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--accent-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .header-icon svg {
+    width: 18px;
+    height: 18px;
+    stroke: var(--accent);
+    fill: none;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* ── SEARCH ── */
+  .search-wrap {
+    position: relative;
+    margin-bottom: 24px;
+  }
+
+  .search-wrap svg {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    stroke: var(--muted);
+    fill: none;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    pointer-events: none;
+  }
+
+  #searchInput {
+    width: 100%;
+    padding: 12px 16px 12px 40px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    font-family: 'Jost', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  #searchInput::placeholder { color: var(--muted); }
+  #searchInput:focus { border-color: var(--accent); }
+
+  /* ── SECTION LABEL ── */
+  .section-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 0 24px;
+    margin-bottom: 12px;
+    flex-shrink: 0;
+  }
+
+  /* ── PDF LIST ── */
+  .pdf-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 16px;
+    padding-bottom: calc(24px + var(--safe-bottom));
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .pdf-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+    animation: slideIn 0.4s ease both;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .pdf-card:active {
+    transform: scale(0.98);
+    box-shadow: none;
+  }
+
+  .pdf-card:hover {
+    border-color: var(--accent);
+    box-shadow: 0 4px 20px rgba(200,169,110,0.08);
+  }
+
+  .pdf-thumb {
+    width: 46px;
+    height: 56px;
+    background: var(--accent-soft);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .pdf-thumb::after {
+    content: '';
+    position: absolute;
+    top: 6px; right: 6px;
+    width: 8px; height: 8px;
+    border-top: 2px solid var(--accent);
+    border-right: 2px solid var(--accent);
+    border-radius: 1px;
+  }
+
+  .pdf-thumb svg {
+    width: 20px;
+    height: 20px;
+    fill: var(--accent);
+    opacity: 0.7;
+  }
+
+  .pdf-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .pdf-title {
+    font-family: 'Cormorant', serif;
+    font-size: 17px;
+    font-weight: 400;
+    color: var(--text);
+    line-height: 1.3;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .pdf-meta {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+  }
+
+  .pdf-arrow {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .pdf-arrow svg {
+    width: 14px;
+    height: 14px;
+    stroke: var(--muted);
+    fill: none;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* ── EMPTY STATE ── */
+  .empty {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 32px;
+    text-align: center;
+  }
+
+  .empty.show { display: flex; }
+
+  .empty-icon {
+    width: 64px;
+    height: 64px;
+    background: var(--accent-soft);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+  }
+
+  .empty-icon svg {
+    width: 28px;
+    height: 28px;
+    stroke: var(--accent);
+    fill: none;
+    stroke-width: 1.2;
+  }
+
+  .empty h3 {
+    font-family: 'Cormorant', serif;
+    font-size: 20px;
+    font-weight: 400;
+    margin-bottom: 6px;
+  }
+
+  .empty p {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* ── VIEWER OVERLAY ── */
+  #viewer {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: #fff;
+    z-index: 100;
+    flex-direction: column;
+  }
+
+  #viewer.open { display: flex; }
+
+  .viewer-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: calc(14px + var(--safe-top)) 20px 14px;
+    border-bottom: 1px solid var(--border);
+    background: #fff;
+    flex-shrink: 0;
+  }
+
+  .back-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .back-btn svg {
+    width: 16px;
+    height: 16px;
+    stroke: var(--text);
+    fill: none;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .viewer-title {
+    font-family: 'Cormorant', serif;
+    font-size: 18px;
+    font-weight: 400;
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  #pdfFrame {
+    flex: 1;
+    width: 100%;
+    border: none;
+    background: var(--bg);
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .pdf-card:nth-child(1) { animation-delay: 0.05s; }
+  .pdf-card:nth-child(2) { animation-delay: 0.1s; }
+  .pdf-card:nth-child(3) { animation-delay: 0.15s; }
+  .pdf-card:nth-child(4) { animation-delay: 0.2s; }
+  .pdf-card:nth-child(5) { animation-delay: 0.25s; }
+  .pdf-card:nth-child(6) { animation-delay: 0.3s; }
+
+  /* ── DIVIDER ── */
+  .gold-line {
+    width: 32px;
+    height: 1px;
+    background: var(--accent);
+    margin: 6px 0 20px;
+    opacity: 0.5;
+  }
+</style>
+</head>
+<body>
+
+<div id="app">
+  <div class="header">
+    <div class="header-top">
+      <div class="logo">
+        <div class="logo-name">Godfidence</div>
+        <div class="gold-line"></div>
+        <div class="logo-sub">Your Library</div>
+      </div>
+      <div class="header-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      </div>
+    </div>
+    <div class="search-wrap">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="search" id="searchInput" placeholder="Search your library…" oninput="filterPDFs(this.value)">
+    </div>
+  </div>
+
+  <div class="section-label" id="countLabel">All Documents</div>
+
+  <div class="pdf-list" id="pdfList"></div>
+
+  <div class="empty" id="emptyState">
+    <div class="empty-icon">
+      <svg viewBox="0 0 24 24"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+    </div>
+    <h3>Nothing found</h3>
+    <p>Try a different search term</p>
+  </div>
+</div>
+
+<!-- PDF Viewer -->
+<div id="viewer">
+  <div class="viewer-bar">
+    <button class="back-btn" onclick="closeViewer()">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <div class="viewer-title" id="viewerTitle">Document</div>
+  </div>
+  <iframe id="pdfFrame" src=""></iframe>
+</div>
+
+<script>
+  // ─────────────────────────────────────────────
+  // ADD YOUR PDFs HERE
+  // Replace the sample entries with your real PDF links
+  // Use Google Drive: File → Share → Anyone with link → Copy link
+  // Then convert: https://drive.google.com/file/d/FILE_ID/view
+  //           to: https://drive.google.com/file/d/FILE_ID/preview
+  // ─────────────────────────────────────────────
+  const pdfs = [
+    {
+      title: "Monday",
+      category: "Day 1",
+      pages: "Godfidence",
+      url: "https://drive.google.com/file/d/1XQ1pH4AD8Sc6FAPbgn8pK5h1zwFdzbjJ/preview"
+    },
+    {
+      title: "Tuesday",
+      category: "Day 2",
+      pages: "Godfidence",
+      url: "https://drive.google.com/file/d/1cJxgEPZNMBwSgTnVNr7zcuqs0kGieSCP/preview"
+    },
+    {
+      title: "Wednesday",
+      category: "Day 3",
+      pages: "Godfidence",
+      url: "https://drive.google.com/file/d/17GU6X_JDwFX2ucTbBuVZ9lNL_a7jkWfs/preview"
+    },
+    {
+      title: "Thursday",
+      category: "Day 4",
+      pages: "Godfidence",
+      url: "https://drive.google.com/file/d/1AvaG_-0wdJfWhY_9B0yczbMTKoWtDnPY/preview"
+    },
+    {
+      title: "Friday",
+      category: "Day 5",
+      pages: "Godfidence",
+      url: "https://drive.google.com/file/d/1tg5fCGVSWMKa5pr91BGWpW1ppQxmWDmm/preview"
+    },
+    {
+      title: "Saturday",
+      category: "Day 6",
+      pages: "Godfidence",
+      url: "https://drive.google.com/file/d/1J_pGW6zmqOqvb6Vyxd8ekHGFEKao0opQ/preview"
+    },
+    {
+      title: "Sunday",
+      category: "Day 7",
+      pages: "Godfidence",
+      url: "https://drive.google.com/file/d/1t-e5RAOjRFwGB0aPV3QeUg0ruVcbvpK0/preview"
+    },
+  ];
+
+  // ─── Render ───
+  const list = document.getElementById('pdfList');
+  const empty = document.getElementById('emptyState');
+  const countLabel = document.getElementById('countLabel');
+
+  function renderPDFs(items) {
+    list.innerHTML = '';
+    if (items.length === 0) {
+      empty.classList.add('show');
+      countLabel.textContent = 'No results';
+      return;
+    }
+    empty.classList.remove('show');
+    countLabel.textContent = items.length === pdfs.length
+      ? `All Documents · ${pdfs.length}`
+      : `${items.length} result${items.length > 1 ? 's' : ''}`;
+
+    items.forEach((pdf, i) => {
+      const card = document.createElement('div');
+      card.className = 'pdf-card';
+      card.style.animationDelay = `${i * 0.05}s`;
+      card.innerHTML = `
+        <div class="pdf-thumb">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          </svg>
+        </div>
+        <div class="pdf-info">
+          <div class="pdf-title">${pdf.title}</div>
+          <div class="pdf-meta">${pdf.category} · ${pdf.pages}</div>
+        </div>
+        <div class="pdf-arrow">
+          <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+      `;
+      card.addEventListener('click', () => openViewer(pdf));
+      list.appendChild(card);
+    });
+  }
+
+  function filterPDFs(query) {
+    const q = query.toLowerCase().trim();
+    const filtered = q
+      ? pdfs.filter(p => p.title.toLowerCase().includes(q) || p.category.toLowerCase().includes(q))
+      : pdfs;
+    renderPDFs(filtered);
+  }
+
+  // ─── Viewer ───
+  function openViewer(pdf) {
+    document.getElementById('viewerTitle').textContent = pdf.title;
+    document.getElementById('pdfFrame').src = pdf.url;
+    document.getElementById('viewer').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeViewer() {
+    document.getElementById('viewer').classList.remove('open');
+    document.getElementById('pdfFrame').src = '';
+    document.body.style.overflow = '';
+  }
+
+  // Init
+  renderPDFs(pdfs);
+</script>
+</body>
+</html>
