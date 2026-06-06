@@ -258,10 +258,7 @@
   }
 
   function openViewer(pdf) {
-    document.getElementById("viewer").classList.add("open");
-    document.getElementById("viewerTitle").textContent = pdf.title;
-    document.getElementById("pdfFrame").src = pdf.url;
-    document.body.style.overflow = "hidden";
+    window.open(pdf.url, "_blank");
   }
 
   function closeViewer() {
