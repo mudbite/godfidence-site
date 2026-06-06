@@ -24,9 +24,7 @@
     --safe-top: env(safe-area-inset-top);
     --safe-bottom: env(safe-area-inset-bottom);
   }
-
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
   html, body {
     height: 100%;
     background: var(--bg);
@@ -35,7 +33,6 @@
     font-weight: 300;
     overscroll-behavior: none;
   }
-
   #app {
     display: flex;
     flex-direction: column;
@@ -44,20 +41,17 @@
     margin: 0 auto;
     background: var(--bg);
   }
-
   .header {
     padding: calc(20px + var(--safe-top)) 24px 0;
     background: var(--bg);
     flex-shrink: 0;
   }
-
   .header-top {
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
     margin-bottom: 20px;
   }
-
   .logo-name {
     font-family: 'Cormorant', serif;
     font-size: 30px;
@@ -66,7 +60,6 @@
     color: var(--text);
     line-height: 1;
   }
-
   .logo-sub {
     font-size: 10px;
     font-weight: 400;
@@ -75,7 +68,6 @@
     text-transform: uppercase;
     margin-top: 4px;
   }
-
   .header-icon {
     width: 38px;
     height: 38px;
@@ -87,12 +79,7 @@
     font-size: 16px;
     color: var(--accent);
   }
-
-  .search-wrap {
-    position: relative;
-    margin-bottom: 24px;
-  }
-
+  .search-wrap { margin-bottom: 24px; }
   #searchInput {
     width: 100%;
     padding: 12px 16px;
@@ -107,10 +94,8 @@
     transition: border-color 0.2s;
     -webkit-appearance: none;
   }
-
   #searchInput::placeholder { color: var(--muted); }
   #searchInput:focus { border-color: var(--accent); }
-
   .section-label {
     font-size: 10px;
     font-weight: 500;
@@ -121,7 +106,6 @@
     margin-bottom: 12px;
     flex-shrink: 0;
   }
-
   .pdf-list {
     flex: 1;
     overflow-y: auto;
@@ -129,7 +113,6 @@
     padding-bottom: calc(24px + var(--safe-bottom));
     -webkit-overflow-scrolling: touch;
   }
-
   .pdf-card {
     display: flex;
     align-items: center;
@@ -142,10 +125,8 @@
     cursor: pointer;
     transition: border-color 0.2s, transform 0.15s;
   }
-
   .pdf-card:active { transform: scale(0.98); }
   .pdf-card:hover { border-color: var(--accent); }
-
   .pdf-title {
     font-family: 'Cormorant', serif;
     font-size: 20px;
@@ -153,20 +134,13 @@
     color: var(--text);
     margin-bottom: 2px;
   }
-
   .pdf-meta {
     font-size: 11px;
     color: var(--muted);
     letter-spacing: 0.08em;
     text-transform: uppercase;
   }
-
-  .pdf-arrow {
-    color: var(--muted);
-    font-size: 18px;
-  }
-
-  /* Viewer */
+  .pdf-arrow { color: var(--muted); font-size: 20px; }
   #viewer {
     display: none;
     position: fixed;
@@ -175,9 +149,7 @@
     z-index: 100;
     flex-direction: column;
   }
-
   #viewer.open { display: flex; }
-
   .viewer-bar {
     display: flex;
     align-items: center;
@@ -187,7 +159,6 @@
     background: #fff;
     flex-shrink: 0;
   }
-
   .viewer-bar button {
     padding: 8px 16px;
     background: var(--bg);
@@ -199,7 +170,6 @@
     cursor: pointer;
     flex-shrink: 0;
   }
-
   #viewerTitle {
     font-family: 'Cormorant', serif;
     font-size: 20px;
@@ -209,7 +179,6 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
-
   #pdfFrame {
     flex: 1;
     width: 100%;
@@ -247,16 +216,14 @@
 </div>
 
 <script>
-  // ── If you upload PDFs directly to Netlify, use: "./files/monday.pdf"
-  // ── If using Google Drive, use the /preview link format below
   const pdfs = [
-    { title: "Monday",    category: "Day 1", url: "https://drive.google.com/file/d/1XQ1pH4AD8Sc6FAPbgn8pK5h1zwFdzbjJ/preview" },
-    { title: "Tuesday",   category: "Day 2", url: "https://drive.google.com/file/d/1cJxgEPZNMBwSgTnVNr7zcuqs0kGieSCP/preview" },
-    { title: "Wednesday", category: "Day 3", url: "https://drive.google.com/file/d/17GU6X_JDwFX2ucTbBuVZ9lNL_a7jkWfs/preview" },
-    { title: "Thursday",  category: "Day 4", url: "https://drive.google.com/file/d/1AvaG_-0wdJfWhY_9B0yczbMTKoWtDnPY/preview" },
-    { title: "Friday",    category: "Day 5", url: "https://drive.google.com/file/d/1tg5fCGVSWMKa5pr91BGWpW1ppQxmWDmm/preview" },
-    { title: "Saturday",  category: "Day 6", url: "https://drive.google.com/file/d/1J_pGW6zmqOqvb6Vyxd8ekHGFEKao0opQ/preview" },
-    { title: "Sunday",    category: "Day 7", url: "https://drive.google.com/file/d/1t-e5RAOjRFwGB0aPV3QeUg0ruVcbvpK0/preview" },
+    { title: "Monday",    category: "Day 1", url: "./monday.pdf" },
+    { title: "Tuesday",   category: "Day 2", url: "./tuesday.pdf" },
+    { title: "Wednesday", category: "Day 3", url: "./wednesday.pdf" },
+    { title: "Thursday",  category: "Day 4", url: "./thursday.pdf" },
+    { title: "Friday",    category: "Day 5", url: "./friday.pdf" },
+    { title: "Saturday",  category: "Day 6", url: "./saturday.pdf" },
+    { title: "Sunday",    category: "Day 7", url: "./sunday.pdf" },
   ];
 
   const list = document.getElementById("pdfList");
@@ -267,7 +234,6 @@
     countLabel.textContent = items.length === pdfs.length
       ? `All Documents · ${pdfs.length}`
       : `${items.length} result${items.length !== 1 ? "s" : ""}`;
-
     items.forEach(pdf => {
       const div = document.createElement("div");
       div.className = "pdf-card";
