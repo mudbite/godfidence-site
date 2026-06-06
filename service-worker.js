@@ -1,67 +1,53 @@
-const CACHE_NAME = "godfidence-cache-v2";
+const CACHE_NAME = "godfidence-cache-v4";
 
-// Core app shell + ALL PDFs
 const FILES_TO_CACHE = [
-  "/",
-  "/index.html",
-  "/manifest.json",
-  "/icon.png",
-
-  // PDF folder (important for offline access)
-  "/files/monday.pdf",
-  "/files/tuesday.pdf",
-  "/files/wednesday.pdf",
-  "/files/thursday.pdf",
-  "/files/friday.pdf",
-  "/files/saturday.pdf",
-  "/files/sunday.pdf"
+  "./",
+  "./index.html",
+  "./manifest.json",
+  "./icon.png",
+  "./monday.pdf",
+  "./tuesday.pdf",
+  "./wednesday.pdf",
+  "./thursday.pdf",
+  "./friday.pdf",
+  "./saturday.pdf",
+  "./sunday.pdf"
 ];
 
-// INSTALL: cache everything initially
 self.addEventListener("install", event => {
   self.skipWaiting();
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(FILES_TO_CACHE))
+    caches.open(CACHE_NAME).then(async cache => {
+      for (const file of FILES_TO_CACHE) {
+        try {
+          await cache.add(file);
+        } catch (e) {
+          console.warn("Failed to cache:", file);
+        }
+      }
+    })
   );
 });
 
-// ACTIVATE: remove old caches
 self.addEventListener("activate", event => {
   event.waitUntil(
     caches.keys().then(keys =>
-      Promise.all(
-        keys.map(key => {
-          if (key !== CACHE_NAME) return caches.delete(key);
-        })
-      )
+      Promise.all(keys.map(key => key !== CACHE_NAME && caches.delete(key)))
     )
   );
   self.clients.claim();
 });
 
-// FETCH: cache-first strategy (offline-first app)
 self.addEventListener("fetch", event => {
   event.respondWith(
     caches.match(event.request).then(cached => {
       if (cached) return cached;
-
       return fetch(event.request).then(response => {
-        // Only cache valid responses
-        if (!response || response.status !== 200) {
-          return response;
-        }
-
-        const responseClone = response.clone();
-
-        caches.open(CACHE_NAME).then(cache => {
-          cache.put(event.request, responseClone);
-        });
-
+        if (!response || response.status !== 200) return response;
+        const clone = response.clone();
+        caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
         return response;
-      }).catch(() => {
-        // If offline and not cached
-        return caches.match("/index.html");
-      });
+      }).catch(() => caches.match("./index.html"));
     })
   );
 });
