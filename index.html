@@ -20,6 +20,8 @@
     --muted: #9a9890;
     --accent: #c8a96e;
     --accent-soft: #f5efe4;
+    --danger: #c0392b;
+    --danger-soft: #fdf0ee;
     --radius: 16px;
     --safe-top: env(safe-area-inset-top);
     --safe-bottom: env(safe-area-inset-bottom);
@@ -41,6 +43,8 @@
     margin: 0 auto;
     background: var(--bg);
   }
+
+  /* ── HEADER ── */
   .header {
     padding: calc(20px + var(--safe-top)) 24px 0;
     background: var(--bg);
@@ -68,17 +72,28 @@
     text-transform: uppercase;
     margin-top: 4px;
   }
-  .header-icon {
+  .header-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  .icon-btn {
     width: 38px;
     height: 38px;
     border-radius: 50%;
     background: var(--accent-soft);
+    border: none;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 16px;
+    font-size: 18px;
     color: var(--accent);
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.15s;
   }
+  .icon-btn:active { background: #ecdfc9; }
+
   .search-wrap { margin-bottom: 24px; }
   #searchInput {
     width: 100%;
@@ -96,6 +111,40 @@
   }
   #searchInput::placeholder { color: var(--muted); }
   #searchInput:focus { border-color: var(--accent); }
+
+  /* ── BREADCRUMB ── */
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 24px;
+    margin-bottom: 12px;
+    flex-shrink: 0;
+    min-height: 28px;
+  }
+  .breadcrumb-home {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    cursor: pointer;
+    border: none;
+    background: none;
+    padding: 0;
+    font-family: 'Jost', sans-serif;
+  }
+  .breadcrumb-sep {
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .breadcrumb-current {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
   .section-label {
     font-size: 10px;
     font-weight: 500;
@@ -106,6 +155,8 @@
     margin-bottom: 12px;
     flex-shrink: 0;
   }
+
+  /* ── LIST ── */
   .pdf-list {
     flex: 1;
     overflow-y: auto;
@@ -113,6 +164,56 @@
     padding-bottom: calc(24px + var(--safe-bottom));
     -webkit-overflow-scrolling: touch;
   }
+
+  /* ── FOLDER CARD ── */
+  .folder-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--accent-soft);
+    border: 1px solid #e8dfc8;
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.15s;
+  }
+  .folder-card:active { transform: scale(0.98); }
+  .folder-card:hover { border-color: var(--accent); }
+  .folder-left { display: flex; align-items: center; gap: 14px; }
+  .folder-icon { font-size: 22px; line-height: 1; }
+  .folder-name {
+    font-family: 'Cormorant', serif;
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+  .folder-count {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .folder-actions { display: flex; gap: 8px; align-items: center; }
+  .card-action-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    font-size: 15px;
+    color: var(--muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s, color 0.15s;
+  }
+  .card-action-btn:hover { background: var(--border); color: var(--text); }
+  .card-action-btn.danger:hover { background: var(--danger-soft); color: var(--danger); }
+
+  /* ── PDF CARD ── */
   .pdf-card {
     display: flex;
     align-items: center;
@@ -127,12 +228,18 @@
   }
   .pdf-card:active { transform: scale(0.98); }
   .pdf-card:hover { border-color: var(--accent); }
+  .pdf-left { display: flex; align-items: center; gap: 14px; flex: 1; min-width: 0; }
+  .pdf-icon { font-size: 20px; flex-shrink: 0; }
+  .pdf-info { min-width: 0; flex: 1; }
   .pdf-title {
     font-family: 'Cormorant', serif;
     font-size: 20px;
     font-weight: 400;
     color: var(--text);
     margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .pdf-meta {
     font-size: 11px;
@@ -140,7 +247,138 @@
     letter-spacing: 0.08em;
     text-transform: uppercase;
   }
-  .pdf-arrow { color: var(--muted); font-size: 20px; }
+  .pdf-actions { display: flex; gap: 6px; align-items: center; flex-shrink: 0; margin-left: 8px; }
+
+  /* ── EMPTY STATE ── */
+  .empty-state {
+    text-align: center;
+    padding: 48px 24px;
+    color: var(--muted);
+  }
+  .empty-icon { font-size: 40px; margin-bottom: 16px; opacity: 0.4; }
+  .empty-title {
+    font-family: 'Cormorant', serif;
+    font-size: 22px;
+    font-weight: 300;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .empty-sub { font-size: 13px; line-height: 1.6; }
+
+  /* ── MODALS ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(26,26,24,0.45);
+    z-index: 200;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--surface);
+    border-radius: 20px 20px 0 0;
+    padding: 28px 24px calc(28px + var(--safe-bottom));
+    width: 100%;
+    max-width: 430px;
+  }
+  .modal-title {
+    font-family: 'Cormorant', serif;
+    font-size: 22px;
+    font-weight: 400;
+    margin-bottom: 20px;
+    color: var(--text);
+  }
+  .modal-input {
+    width: 100%;
+    padding: 12px 16px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-family: 'Jost', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--text);
+    outline: none;
+    margin-bottom: 16px;
+    transition: border-color 0.2s;
+    -webkit-appearance: none;
+  }
+  .modal-input:focus { border-color: var(--accent); }
+  .modal-select {
+    width: 100%;
+    padding: 12px 16px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-family: 'Jost', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--text);
+    outline: none;
+    margin-bottom: 16px;
+    -webkit-appearance: none;
+    appearance: none;
+    cursor: pointer;
+  }
+  .modal-select:focus { border-color: var(--accent); }
+  .modal-btn-row { display: flex; gap: 10px; }
+  .btn-primary {
+    flex: 1;
+    padding: 13px;
+    background: var(--accent);
+    border: none;
+    border-radius: 10px;
+    font-family: 'Jost', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    color: #fff;
+    cursor: pointer;
+    letter-spacing: 0.04em;
+    transition: opacity 0.15s;
+  }
+  .btn-primary:active { opacity: 0.8; }
+  .btn-secondary {
+    flex: 1;
+    padding: 13px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-family: 'Jost', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--text);
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+  .btn-secondary:active { border-color: var(--muted); }
+  .modal-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+    display: block;
+  }
+  .upload-zone {
+    border: 1.5px dashed var(--border);
+    border-radius: 12px;
+    padding: 28px 20px;
+    text-align: center;
+    margin-bottom: 16px;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    background: var(--bg);
+  }
+  .upload-zone:hover, .upload-zone.drag { border-color: var(--accent); background: var(--accent-soft); }
+  .upload-zone-icon { font-size: 28px; margin-bottom: 10px; }
+  .upload-zone-text { font-size: 13px; color: var(--muted); line-height: 1.6; }
+  .upload-zone-text strong { color: var(--accent); font-weight: 400; }
+  #fileInput { display: none; }
+
+  /* ── VIEWER ── */
   #viewer {
     display: none;
     position: fixed;
@@ -185,6 +423,26 @@
     border: none;
     background: var(--bg);
   }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed;
+    bottom: calc(24px + var(--safe-bottom));
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--text);
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-family: 'Jost', sans-serif;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s, transform 0.25s;
+    white-space: nowrap;
+    z-index: 9999;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 </style>
 </head>
 <body>
@@ -194,19 +452,24 @@
     <div class="header-top">
       <div>
         <div class="logo-name">Godfidence</div>
-        <div class="logo-sub">Your Library</div>
+        <div class="logo-sub" id="logoSub">Your Library</div>
       </div>
-      <div class="header-icon">★</div>
+      <div class="header-actions">
+        <button class="icon-btn" id="addPdfBtn" title="Add PDF" onclick="openAddPdf()">＋</button>
+        <button class="icon-btn" id="newFolderBtn" title="New Folder" onclick="openNewFolder()">📁</button>
+      </div>
     </div>
     <div class="search-wrap">
-      <input type="search" id="searchInput" placeholder="Search…" oninput="filterPDFs(this.value)">
+      <input type="search" id="searchInput" placeholder="Search…" oninput="onSearch(this.value)">
     </div>
   </div>
 
+  <div class="breadcrumb" id="breadcrumb"></div>
   <div class="section-label" id="countLabel">All Documents</div>
   <div class="pdf-list" id="pdfList"></div>
 </div>
 
+<!-- PDF VIEWER -->
 <div id="viewer">
   <div class="viewer-bar">
     <button onclick="closeViewer()">← Back</button>
@@ -215,59 +478,551 @@
   <iframe id="pdfFrame" src=""></iframe>
 </div>
 
-<script>
-  const pdfs = [
-    { title: "Monday",    category: "Day 1", url: "./monday.pdf" },
-    { title: "Tuesday",   category: "Day 2", url: "./tuesday.pdf" },
-    { title: "Wednesday", category: "Day 3", url: "./wednesday.pdf" },
-    { title: "Thursday",  category: "Day 4", url: "./thursday.pdf" },
-    { title: "Friday",    category: "Day 5", url: "./friday.pdf" },
-    { title: "Saturday",  category: "Day 6", url: "./saturday.pdf" },
-    { title: "Sunday",    category: "Day 7", url: "./sunday.pdf" },
-  ];
+<!-- NEW FOLDER MODAL -->
+<div class="modal-overlay" id="folderModal">
+  <div class="modal">
+    <div class="modal-title" id="folderModalTitle">New Folder</div>
+    <span class="modal-label">Folder Name</span>
+    <input class="modal-input" id="folderNameInput" placeholder="e.g. Duas, Tafsir…" maxlength="40">
+    <div class="modal-btn-row">
+      <button class="btn-secondary" onclick="closeFolderModal()">Cancel</button>
+      <button class="btn-primary" onclick="saveFolder()">Save</button>
+    </div>
+  </div>
+</div>
 
+<!-- ADD PDF MODAL -->
+<div class="modal-overlay" id="addPdfModal">
+  <div class="modal">
+    <div class="modal-title">Add PDF</div>
+    <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+      <div class="upload-zone-icon">📄</div>
+      <div class="upload-zone-text" id="uploadZoneText">Tap to choose a PDF<br><strong>from your device</strong></div>
+    </div>
+    <input type="file" id="fileInput" accept="application/pdf" multiple>
+    <span class="modal-label">Title (optional)</span>
+    <input class="modal-input" id="pdfTitleInput" placeholder="Leave blank to use filename">
+    <span class="modal-label">Add to Folder</span>
+    <select class="modal-select" id="pdfFolderSelect">
+      <option value="">— No folder —</option>
+    </select>
+    <div class="modal-btn-row">
+      <button class="btn-secondary" onclick="closeAddPdf()">Cancel</button>
+      <button class="btn-primary" onclick="savePdf()">Add to Library</button>
+    </div>
+  </div>
+</div>
+
+<!-- MOVE PDF MODAL -->
+<div class="modal-overlay" id="movePdfModal">
+  <div class="modal">
+    <div class="modal-title">Move to Folder</div>
+    <select class="modal-select" id="moveFolderSelect">
+      <option value="">— No folder —</option>
+    </select>
+    <div class="modal-btn-row">
+      <button class="btn-secondary" onclick="closeMoveModal()">Cancel</button>
+      <button class="btn-primary" onclick="confirmMove()">Move</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ─────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────
+const BUILT_IN = [
+  { id: "builtin-mon", title: "Monday",    category: "Day 1", url: "./monday.pdf",    builtin: true },
+  { id: "builtin-tue", title: "Tuesday",   category: "Day 2", url: "./tuesday.pdf",   builtin: true },
+  { id: "builtin-wed", title: "Wednesday", category: "Day 3", url: "./wednesday.pdf", builtin: true },
+  { id: "builtin-thu", title: "Thursday",  category: "Day 4", url: "./thursday.pdf",  builtin: true },
+  { id: "builtin-fri", title: "Friday",    category: "Day 5", url: "./friday.pdf",    builtin: true },
+  { id: "builtin-sat", title: "Saturday",  category: "Day 6", url: "./saturday.pdf",  builtin: true },
+  { id: "builtin-sun", title: "Sunday",    category: "Day 7", url: "./sunday.pdf",    builtin: true },
+];
+
+let state = {
+  folders: [],   // { id, name }
+  pdfs: [],      // user-added: { id, title, folderId|null, storeKey }
+  currentFolder: null,   // folder id or null = root
+  editingFolderId: null,
+  movingPdfId: null,
+  pendingFiles: [],      // FileList staging for upload modal
+};
+
+// ─────────────────────────────────────────────
+// INDEXEDDB for PDF blobs
+// ─────────────────────────────────────────────
+let db;
+function openDB() {
+  return new Promise((res, rej) => {
+    const req = indexedDB.open("godfidence-pdfs", 1);
+    req.onupgradeneeded = e => e.target.result.createObjectStore("pdfs");
+    req.onsuccess = e => { db = e.target.result; res(); };
+    req.onerror = () => rej();
+  });
+}
+function storeBlob(key, blob) {
+  return new Promise((res, rej) => {
+    const tx = db.transaction("pdfs", "readwrite");
+    tx.objectStore("pdfs").put(blob, key);
+    tx.oncomplete = res;
+    tx.onerror = rej;
+  });
+}
+function getBlob(key) {
+  return new Promise((res, rej) => {
+    const tx = db.transaction("pdfs", "readonly");
+    const req = tx.objectStore("pdfs").get(key);
+    req.onsuccess = () => res(req.result);
+    req.onerror = rej;
+  });
+}
+function deleteBlob(key) {
+  return new Promise((res, rej) => {
+    const tx = db.transaction("pdfs", "readwrite");
+    tx.objectStore("pdfs").delete(key);
+    tx.oncomplete = res;
+    tx.onerror = rej;
+  });
+}
+
+// ─────────────────────────────────────────────
+// PERSIST
+// ─────────────────────────────────────────────
+function saveState() {
+  localStorage.setItem("gdf-folders", JSON.stringify(state.folders));
+  localStorage.setItem("gdf-pdfs", JSON.stringify(state.pdfs));
+}
+function loadState() {
+  state.folders = JSON.parse(localStorage.getItem("gdf-folders") || "[]");
+  state.pdfs    = JSON.parse(localStorage.getItem("gdf-pdfs")    || "[]");
+}
+
+// ─────────────────────────────────────────────
+// HELPERS
+// ─────────────────────────────────────────────
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+
+function toast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 2200);
+}
+
+function folderPdfCount(fid) {
+  return state.pdfs.filter(p => p.folderId === fid).length;
+}
+
+function allPdfsInView() {
+  // Merge built-ins + user PDFs, filter by current folder or root
+  if (state.currentFolder) {
+    return state.pdfs.filter(p => p.folderId === state.currentFolder);
+  } else {
+    // root: built-ins + unfoldered user PDFs
+    const builtins = BUILT_IN.map(b => ({
+      ...b,
+      folderId: null,
+      isBuiltin: true,
+      storeKey: null,
+    }));
+    const userUnfoldered = state.pdfs.filter(p => !p.folderId);
+    return [...builtins, ...userUnfoldered];
+  }
+}
+
+// ─────────────────────────────────────────────
+// RENDER
+// ─────────────────────────────────────────────
+function render(searchQ = "") {
   const list = document.getElementById("pdfList");
   const countLabel = document.getElementById("countLabel");
+  const breadcrumb = document.getElementById("breadcrumb");
+  const logoSub = document.getElementById("logoSub");
+  const q = searchQ.toLowerCase().trim();
 
-  function render(items) {
-    list.innerHTML = "";
-    countLabel.textContent = items.length === pdfs.length
-      ? `All Documents · ${pdfs.length}`
-      : `${items.length} result${items.length !== 1 ? "s" : ""}`;
-    items.forEach(pdf => {
-      const div = document.createElement("div");
-      div.className = "pdf-card";
-      div.innerHTML = `
-        <div>
-          <div class="pdf-title">${pdf.title}</div>
-          <div class="pdf-meta">${pdf.category}</div>
-        </div>
-        <div class="pdf-arrow">›</div>
-      `;
-      div.onclick = () => openViewer(pdf);
-      list.appendChild(div);
-    });
+  list.innerHTML = "";
+
+  // Breadcrumb
+  if (state.currentFolder) {
+    const folder = state.folders.find(f => f.id === state.currentFolder);
+    breadcrumb.innerHTML = `
+      <button class="breadcrumb-home" onclick="goRoot()">Library</button>
+      <span class="breadcrumb-sep">›</span>
+      <span class="breadcrumb-current">${folder ? folder.name : "Folder"}</span>
+    `;
+    logoSub.textContent = folder ? folder.name : "Folder";
+  } else {
+    breadcrumb.innerHTML = `<span class="breadcrumb-current">All Documents</span>`;
+    logoSub.textContent = "Your Library";
   }
 
-  function filterPDFs(q) {
-    q = q.toLowerCase().trim();
-    render(q ? pdfs.filter(p =>
+  let items = [];
+
+  if (!state.currentFolder && !q) {
+    // Root view: show folders first, then root PDFs
+    const folders = state.folders;
+    const pdfs = allPdfsInView();
+
+    countLabel.textContent = `${folders.length} folder${folders.length !== 1 ? "s" : ""} · ${pdfs.length} document${pdfs.length !== 1 ? "s" : ""}`;
+
+    if (folders.length === 0 && pdfs.length === 0) {
+      list.innerHTML = emptyHTML("No documents yet", "Tap ＋ to add your first PDF.");
+      return;
+    }
+
+    folders.forEach(folder => renderFolderCard(folder, list));
+    pdfs.forEach(pdf => renderPdfCard(pdf, list));
+    return;
+  }
+
+  if (q) {
+    // Search across everything
+    const allBuiltins = BUILT_IN.map(b => ({ ...b, isBuiltin: true, folderId: null }));
+    const allPdfs = [...allBuiltins, ...state.pdfs];
+    items = allPdfs.filter(p =>
       p.title.toLowerCase().includes(q) ||
-      p.category.toLowerCase().includes(q)
-    ) : pdfs);
+      (p.category && p.category.toLowerCase().includes(q))
+    );
+    const matchFolders = state.folders.filter(f => f.name.toLowerCase().includes(q));
+    countLabel.textContent = `${matchFolders.length + items.length} result${matchFolders.length + items.length !== 1 ? "s" : ""}`;
+    if (matchFolders.length === 0 && items.length === 0) {
+      list.innerHTML = emptyHTML("No results", `Nothing matches "${searchQ}".`);
+      return;
+    }
+    matchFolders.forEach(f => renderFolderCard(f, list));
+    items.forEach(p => renderPdfCard(p, list));
+    return;
   }
 
-  function openViewer(pdf) {
+  // Inside a folder
+  items = allPdfsInView();
+  const folder = state.folders.find(f => f.id === state.currentFolder);
+  countLabel.textContent = `${items.length} document${items.length !== 1 ? "s" : ""}`;
+  if (items.length === 0) {
+    list.innerHTML = emptyHTML("Empty folder", "Tap ＋ to add PDFs here.");
+    return;
+  }
+  items.forEach(p => renderPdfCard(p, list));
+}
+
+function emptyHTML(title, sub) {
+  return `<div class="empty-state">
+    <div class="empty-icon">📂</div>
+    <div class="empty-title">${title}</div>
+    <div class="empty-sub">${sub}</div>
+  </div>`;
+}
+
+function renderFolderCard(folder, container) {
+  const count = folderPdfCount(folder.id);
+  const div = document.createElement("div");
+  div.className = "folder-card";
+  div.innerHTML = `
+    <div class="folder-left" style="flex:1;min-width:0;">
+      <div class="folder-icon">📁</div>
+      <div>
+        <div class="folder-name">${folder.name}</div>
+        <div class="folder-count">${count} document${count !== 1 ? "s" : ""}</div>
+      </div>
+    </div>
+    <div class="folder-actions">
+      <button class="card-action-btn" title="Rename" onclick="event.stopPropagation();openRenameFolder('${folder.id}')">✏️</button>
+      <button class="card-action-btn danger" title="Delete folder" onclick="event.stopPropagation();deleteFolder('${folder.id}')">🗑️</button>
+    </div>
+  `;
+  div.onclick = () => openFolder(folder.id);
+  container.appendChild(div);
+}
+
+function renderPdfCard(pdf, container) {
+  const isBuiltin = pdf.isBuiltin || pdf.builtin;
+  const div = document.createElement("div");
+  div.className = "pdf-card";
+
+  const actionButtons = isBuiltin ? `
+    <div class="pdf-arrow" style="color:var(--muted);font-size:20px;">›</div>
+  ` : `
+    <div class="pdf-actions">
+      <button class="card-action-btn" title="Move to folder" onclick="event.stopPropagation();openMoveModal('${pdf.id}')">📂</button>
+      <button class="card-action-btn danger" title="Delete" onclick="event.stopPropagation();deletePdf('${pdf.id}')">🗑️</button>
+    </div>
+  `;
+
+  div.innerHTML = `
+    <div class="pdf-left">
+      <div class="pdf-icon">${isBuiltin ? "📖" : "📄"}</div>
+      <div class="pdf-info">
+        <div class="pdf-title">${pdf.title}</div>
+        <div class="pdf-meta">${pdf.category || (isBuiltin ? "" : "Added")}</div>
+      </div>
+    </div>
+    ${actionButtons}
+  `;
+  div.onclick = () => openPdf(pdf);
+  container.appendChild(div);
+}
+
+// ─────────────────────────────────────────────
+// NAVIGATION
+// ─────────────────────────────────────────────
+function goRoot() {
+  state.currentFolder = null;
+  document.getElementById("searchInput").value = "";
+  render();
+}
+function openFolder(fid) {
+  state.currentFolder = fid;
+  document.getElementById("searchInput").value = "";
+  render();
+}
+function onSearch(val) {
+  render(val);
+}
+
+// ─────────────────────────────────────────────
+// OPEN PDF
+// ─────────────────────────────────────────────
+async function openPdf(pdf) {
+  if (pdf.isBuiltin || pdf.builtin) {
     window.open(pdf.url, "_blank");
+    return;
+  }
+  try {
+    const blob = await getBlob(pdf.storeKey);
+    if (!blob) { toast("File not found — it may have been cleared."); return; }
+    const url = URL.createObjectURL(blob);
+    document.getElementById("viewerTitle").textContent = pdf.title;
+    document.getElementById("pdfFrame").src = url;
+    document.getElementById("viewer").classList.add("open");
+  } catch(e) {
+    toast("Could not open file.");
+  }
+}
+function closeViewer() {
+  const frame = document.getElementById("pdfFrame");
+  URL.revokeObjectURL(frame.src);
+  frame.src = "";
+  document.getElementById("viewer").classList.remove("open");
+}
+
+// ─────────────────────────────────────────────
+// FOLDER CRUD
+// ─────────────────────────────────────────────
+function openNewFolder() {
+  state.editingFolderId = null;
+  document.getElementById("folderModalTitle").textContent = "New Folder";
+  document.getElementById("folderNameInput").value = "";
+  document.getElementById("folderModal").classList.add("open");
+  setTimeout(() => document.getElementById("folderNameInput").focus(), 100);
+}
+function openRenameFolder(fid) {
+  const folder = state.folders.find(f => f.id === fid);
+  if (!folder) return;
+  state.editingFolderId = fid;
+  document.getElementById("folderModalTitle").textContent = "Rename Folder";
+  document.getElementById("folderNameInput").value = folder.name;
+  document.getElementById("folderModal").classList.add("open");
+  setTimeout(() => document.getElementById("folderNameInput").focus(), 100);
+}
+function closeFolderModal() {
+  document.getElementById("folderModal").classList.remove("open");
+  state.editingFolderId = null;
+}
+function saveFolder() {
+  const name = document.getElementById("folderNameInput").value.trim();
+  if (!name) { toast("Please enter a folder name."); return; }
+  if (state.editingFolderId) {
+    const f = state.folders.find(f => f.id === state.editingFolderId);
+    if (f) f.name = name;
+    toast("Folder renamed.");
+  } else {
+    state.folders.push({ id: uid(), name });
+    toast(`"${name}" created.`);
+  }
+  saveState();
+  closeFolderModal();
+  render();
+}
+function deleteFolder(fid) {
+  if (!confirm("Delete this folder? PDFs inside will move to the main library.")) return;
+  // Move PDFs to root
+  state.pdfs.forEach(p => { if (p.folderId === fid) p.folderId = null; });
+  state.folders = state.folders.filter(f => f.id !== fid);
+  if (state.currentFolder === fid) state.currentFolder = null;
+  saveState();
+  render();
+  toast("Folder deleted.");
+}
+
+// ─────────────────────────────────────────────
+// ADD PDF
+// ─────────────────────────────────────────────
+function populateFolderSelects() {
+  [document.getElementById("pdfFolderSelect"), document.getElementById("moveFolderSelect")].forEach(sel => {
+    if (!sel) return;
+    const current = sel.value;
+    sel.innerHTML = `<option value="">— No folder —</option>`;
+    state.folders.forEach(f => {
+      sel.innerHTML += `<option value="${f.id}">${f.name}</option>`;
+    });
+    sel.value = current;
+  });
+}
+
+function openAddPdf() {
+  state.pendingFiles = [];
+  document.getElementById("pdfTitleInput").value = "";
+  document.getElementById("uploadZoneText").innerHTML = `Tap to choose a PDF<br><strong>from your device</strong>`;
+  document.getElementById("fileInput").value = "";
+  populateFolderSelects();
+  // Pre-select current folder
+  if (state.currentFolder) {
+    document.getElementById("pdfFolderSelect").value = state.currentFolder;
+  } else {
+    document.getElementById("pdfFolderSelect").value = "";
+  }
+  document.getElementById("addPdfModal").classList.add("open");
+}
+function closeAddPdf() {
+  document.getElementById("addPdfModal").classList.remove("open");
+  state.pendingFiles = [];
+}
+
+document.getElementById("fileInput").addEventListener("change", function() {
+  const files = Array.from(this.files);
+  if (!files.length) return;
+  state.pendingFiles = files;
+  if (files.length === 1) {
+    document.getElementById("uploadZoneText").innerHTML = `<strong>${files[0].name}</strong>`;
+    const nameStem = files[0].name.replace(/\.pdf$/i, "");
+    if (!document.getElementById("pdfTitleInput").value.trim()) {
+      document.getElementById("pdfTitleInput").value = nameStem;
+    }
+  } else {
+    document.getElementById("uploadZoneText").innerHTML = `<strong>${files.length} files selected</strong>`;
+    document.getElementById("pdfTitleInput").placeholder = "Titles from filenames";
+    document.getElementById("pdfTitleInput").value = "";
+  }
+});
+
+// Drag support on upload zone
+const uploadZone = document.getElementById("uploadZone");
+uploadZone.addEventListener("dragover", e => { e.preventDefault(); uploadZone.classList.add("drag"); });
+uploadZone.addEventListener("dragleave", () => uploadZone.classList.remove("drag"));
+uploadZone.addEventListener("drop", e => {
+  e.preventDefault();
+  uploadZone.classList.remove("drag");
+  const files = Array.from(e.dataTransfer.files).filter(f => f.type === "application/pdf");
+  if (!files.length) { toast("Please drop PDF files only."); return; }
+  state.pendingFiles = files;
+  document.getElementById("uploadZoneText").innerHTML = files.length === 1
+    ? `<strong>${files[0].name}</strong>`
+    : `<strong>${files.length} PDFs selected</strong>`;
+  if (files.length === 1 && !document.getElementById("pdfTitleInput").value.trim()) {
+    document.getElementById("pdfTitleInput").value = files[0].name.replace(/\.pdf$/i, "");
+  }
+});
+
+async function savePdf() {
+  if (!state.pendingFiles.length) { toast("Please choose a PDF file first."); return; }
+  const folderId = document.getElementById("pdfFolderSelect").value || null;
+  const customTitle = document.getElementById("pdfTitleInput").value.trim();
+
+  for (const file of state.pendingFiles) {
+    const storeKey = uid();
+    const title = (state.pendingFiles.length === 1 && customTitle)
+      ? customTitle
+      : file.name.replace(/\.pdf$/i, "");
+    try {
+      await storeBlob(storeKey, file);
+      state.pdfs.push({ id: uid(), title, folderId, storeKey, category: null });
+    } catch(e) {
+      toast(`Failed to save "${file.name}".`);
+      continue;
+    }
   }
 
-  function closeViewer() {
-    document.getElementById("viewer").classList.remove("open");
-    document.getElementById("pdfFrame").src = "";
-    document.body.style.overflow = "";
-  }
+  saveState();
+  closeAddPdf();
+  if (folderId) openFolder(folderId);
+  else render();
+  toast(state.pendingFiles.length === 1
+    ? `"${state.pendingFiles[0].name.replace(/\.pdf$/i,"")}" added.`
+    : `${state.pendingFiles.length} PDFs added.`
+  );
+  state.pendingFiles = [];
+}
 
-  render(pdfs);
+// ─────────────────────────────────────────────
+// MOVE PDF
+// ─────────────────────────────────────────────
+function openMoveModal(pid) {
+  state.movingPdfId = pid;
+  populateFolderSelects();
+  const pdf = state.pdfs.find(p => p.id === pid);
+  document.getElementById("moveFolderSelect").value = pdf ? (pdf.folderId || "") : "";
+  document.getElementById("movePdfModal").classList.add("open");
+}
+function closeMoveModal() {
+  document.getElementById("movePdfModal").classList.remove("open");
+  state.movingPdfId = null;
+}
+function confirmMove() {
+  const pdf = state.pdfs.find(p => p.id === state.movingPdfId);
+  if (!pdf) { closeMoveModal(); return; }
+  const fid = document.getElementById("moveFolderSelect").value || null;
+  pdf.folderId = fid;
+  saveState();
+  closeMoveModal();
+  render();
+  toast("Moved.");
+}
+
+// ─────────────────────────────────────────────
+// DELETE PDF
+// ─────────────────────────────────────────────
+async function deletePdf(pid) {
+  const pdf = state.pdfs.find(p => p.id === pid);
+  if (!pdf) return;
+  if (!confirm(`Delete "${pdf.title}"?`)) return;
+  await deleteBlob(pdf.storeKey);
+  state.pdfs = state.pdfs.filter(p => p.id !== pid);
+  saveState();
+  render();
+  toast("Deleted.");
+}
+
+// ─────────────────────────────────────────────
+// CLOSE MODALS ON OVERLAY CLICK
+// ─────────────────────────────────────────────
+["folderModal","addPdfModal","movePdfModal"].forEach(id => {
+  document.getElementById(id).addEventListener("click", function(e) {
+    if (e.target === this) {
+      this.classList.remove("open");
+      if (id === "addPdfModal") state.pendingFiles = [];
+      if (id === "movePdfModal") state.movingPdfId = null;
+      if (id === "folderModal") state.editingFolderId = null;
+    }
+  });
+});
+
+// Enter key in folder name input
+document.getElementById("folderNameInput").addEventListener("keydown", e => {
+  if (e.key === "Enter") saveFolder();
+});
+
+// ─────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────
+openDB().then(() => {
+  loadState();
+  render();
+});
 </script>
 
 <script>
